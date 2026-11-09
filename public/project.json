@@ -1,0 +1,19 @@
+{
+  "description": "DJ Turntable Live Wallpaper",
+  "type": "web",
+  "file": "index.html",
+  "general": {
+    "properties": {
+      "schemecolor": {
+        "value": "0.03 0.03 0.05",
+        "order": 0,
+        "text": "背景の基準色"
+      }
+    }
+  },
+  "preview": "preview.jpg",
+  "title": "DJ Turntable Live Wallpaper",
+  "tags": ["Music", "Abstract"],
+  "contentrating": "Everyone",
+  "visibility": "private"
+}
