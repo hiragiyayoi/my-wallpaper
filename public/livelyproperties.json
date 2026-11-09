@@ -1,0 +1,54 @@
+{
+  "title": "DJ Turntable Live Wallpaper",
+  "defaultvisualizer": false,
+  "customise": {
+    "backgroundimage": {
+      "type": "file",
+      "title": "背景画像",
+      "value": "",
+      "step": ""
+    },
+    "overlayopacity": {
+      "type": "slider",
+      "title": "オーバーレイの濃さ",
+      "value": 0.4,
+      "step": 0.05,
+      "max": 1,
+      "min": 0
+    },
+    "videotitle": {
+      "type": "textbox",
+      "title": "動画タイトル",
+      "value": ""
+    },
+    "videocreator": {
+      "type": "textbox",
+      "title": "制作者名",
+      "value": ""
+    },
+    "clockformat": {
+      "type": "dropdown",
+      "title": "時計の表記",
+      "value": "24h",
+      "items": ["24h", "12h"]
+    },
+    "showdate": {
+      "type": "checkbox",
+      "title": "日付を表示",
+      "value": true
+    },
+    "muted": {
+      "type": "checkbox",
+      "title": "ミュート",
+      "value": true
+    },
+    "volume": {
+      "type": "slider",
+      "title": "音量",
+      "value": 1,
+      "step": 0.05,
+      "max": 1,
+      "min": 0
+    }
+  }
+}

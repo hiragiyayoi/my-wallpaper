@@ -37,43 +37,49 @@ DJ ターンテーブルをモチーフとした UI で、背景画像・動画�
 cd ~/nix-config && nix flake check && home-manager switch --flake .#user
 ```
 
-### Node.js / pnpm
+### Node.js / npm
 
 ```bash
-# pnpm で依存関係をインストール
-pnpm install
+# 依存関係をインストール
+npm install
 
 # 開発サーバー起動
-pnpm dev
+npm run dev
 
 # ビルド
-pnpm build
+npm run build
 
 # テスト
-pnpm test
+npm test
 ```
 
 ## プロジェクト構成
 
 ```
 my-wallpaper/
-├── REQUIREMENTS.md      # 要件定義書 (v2.2)
+├── REQUIREMENTS.md      # 要件定義書 (v2.3)
 ├── DESIGN.md            # 内部設計 (未承認ドラフト)
 ├── README.md            # 本ファイル
+├── flake.nix            # Nix dev shell (Node 24)
 ├── package.json
 ├── vite.config.ts
 ├── tsconfig.json
 ├── index.html
+├── public/
+│   ├── project.json         # Wallpaper Engine 用
+│   └── livelyproperties.json # Lively 用
+├── scripts/
+│   ├── render-fallback.mjs  # Tier 2 用スクリーンショット生成
+│   └── export-video.mjs     # mpvpaper 用動画書き出し
 ├── src/
-│   ├── main.ts
-│   ├── components/
-│   │   ├── BackgroundImage.ts
-│   │   ├── Turntable.ts
-│   │   └── Clock.ts
-│   ├── storage/
-│   │   └── IndexedDB.ts
-│   └── styles/
-│       └── theme.css
+│   ├── main.ts              # エントリーポイント
+│   ├── app.ts               # 表示モード / 設定モードの組み立て
+│   ├── types.ts             # WallpaperConfig など
+│   ├── core/                # DOM 非依存のロジック (時計・再生状態・検証・メタデータ)
+│   ├── ui/                  # DOM ビュー (背景・ターンテーブル・時計・設定パネル)
+│   ├── adapters/            # ホスト固有 API の隔離層
+│   ├── storage/             # IndexedDB / メモリドライバ
+│   └── styles/theme.css
 └── dist/                # ビルド成果物
 ```
 
@@ -91,24 +97,88 @@ my-wallpaper/
 ## ライブ壁紙としての使用
 
 ### Windows (Wallpaper Engine)
-1. `dist/` を Wallpaper Engine プロジェクトフォルダに配置
-2. `project.json` を編集
-3. Wallpaper Engine エディタでプレビュー
+
+```bash
+npm run build
+```
+
+1. `dist/` の中身と `project.json` を Wallpaper Engine のプロジェクトフォルダに配置
+2. Wallpaper Engine エディタで `index.html` を開く
+3. 動画は **webm / ogg / ogv のみ**対応 (mp4 は使用しない / WE-006)
 
 ### Windows (Lively Wallpaper)
-1. `dist/` フォルダを Lively にドラッグ&ドロップ
 
-### Linux
 ```bash
-# awww (静止画)
-awww img dist/fallback/screenshot.png
+npm run build
+```
 
-# mpvpaper (動画)
-mpvpaper -o "loop" '*' dist/fallback/output.webm
+1. `dist/` フォルダを Lively にドラッグ&ドロップ
+2. `livelyproperties.json` により設定項目が表示される
+
+### Linux (Tier 2 / Tier 3: HTML を実行できないホスト)
+
+```bash
+# 静止画フォールバック (awww / hyprpaper)
+npm run build
+npm run fallback:render          # Playwright が必要
+awww img dist/fallback/screenshot-1920x1080.png
+
+# 動画フォールバック (mpvpaper)
+npm run fallback:video -- ./my-set.webm
+mpvpaper -o "no-audio --loop" '*' dist/fallback/my-set.webm
 ```
 
 ### macOS (Plash)
-Plash で `index.html` の URL を指定
+
+Plash の設定から `dist/index.html` を指定する。
+設定ページと表示ページが同一オリジンの場合のみ IndexedDB を共有できる (UD-003)。
+
+## 操作
+
+| 操作 | 方法 |
+|---|---|
+| 設定パネルを開く | 右下の「設定」ボタン / `S` キー |
+| 設定パネルを閉じる | 「閉じる」ボタン / `Esc` キー |
+| 背景画像・動画の指定 | 設定パネル内のファイル選択、またはドラッグ&ドロップ |
+
+壁紙はデスクトップの背後に表示されるため、ホスト上での直接操作は限定的です。
+設定はホストのプロパティパネル (Wallpaper Engine / Lively) から行うのが基本です。
+
+## 開発
+
+```bash
+npm install
+npm run dev         # 開発サーバー
+npm test            # 155+ テスト
+npm run typecheck   # tsc --noEmit
+npm run build       # 型チェック + 本番ビルド
+npm run preview     # ビルド成果物のプレビュー
+```
+
+Nix を使う場合:
+
+```bash
+direnv allow        # .envrc を承認
+# または
+nix develop
+```
+
+## 実装状況
+
+| 要件 | 状態 |
+|---|---|
+| F-001 背景画像選択・永続化 | ✅ 実装済み |
+| F-002 動画再生 + ターンテーブル UI | ✅ 実装済み |
+| F-003 時計 (12/24h・日付) | ✅ 実装済み |
+| F-004 デザイン (CSS アニメーション) | ✅ 実装済み |
+| F-005 設定の永続化・復元 | ✅ 実装済み |
+| M-001〜M-018 モード分離 | ✅ 実装済み |
+| NF-001〜NF-015 | 実機測定は未実施 |
+| WE-001〜WE-006 | project.json 同梱済み |
+| LV-001〜LV-003 | livelyproperties.json 同梱済み |
+| T-007〜T-009 Tier 2/3 フォールバック | スクリプト提供済み |
+
+未決定事項 (UD-001〜UD-008) は `REQUIREMENTS.md` §11 を参照してください。
 
 ## ライセンス
 
