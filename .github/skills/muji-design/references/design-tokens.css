@@ -1,0 +1,50 @@
+/* muji-design — design tokens
+ * Base values from the 46-color palette. Shift them per project while
+ * keeping saturation low, staying within warm neutrals, and preserving
+ * the light-to-dark steps and each color's role. */
+
+:root {
+  /* Roles */
+  --md-bg: #fbfaf5;          /* 生成り色 — page background */
+  --md-surface: #f5f5f4;     /* 障子の白 — panels, cards */
+  --md-surface-low: #e5dcd7; /* 拡散光 — lowered surface */
+  --md-step: #d5c0b0;        /* 淡い畳影 — section step */
+  --md-ink: #2e1e12;         /* 梁の濃茶 — primary text */
+  --md-ink-sub: #888e7e;     /* 利休鼠 — secondary text */
+  --md-line: #9f7153;        /* 桟 — hairlines (use at low alpha) */
+  --md-wood: #b3987e;        /* 木肌 — wooden elements */
+  --md-band: #745e4a;        /* 梁の中茶 — strong bands, headings */
+
+  /* Accent: pick ONE per screen, keep it under 10% of the area */
+  --md-accent-matcha: #7a8c5e;  /* 抹茶 */
+  --md-accent-moss: #6c8253;    /* 苔色 */
+  --md-accent-ai: #165e83;      /* 藍色 */
+  --md-accent-sakura: #f2a0a1;  /* 紅梅色 — smallest area of all */
+
+  /* Spacing steps (px) */
+  --md-space-1: 4px;
+  --md-space-2: 8px;
+  --md-space-3: 16px;
+  --md-space-4: 24px;
+  --md-space-5: 40px;
+  --md-space-6: 64px;
+
+  /* Lines, radius, shadow */
+  --md-line-width: 1px;
+  --md-radius: 4px;
+  --md-shadow: 0 2px 16px rgb(46 30 18 / 0.08); /* diffused light, soft and thin */
+
+  /* Type */
+  --md-font-display: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif;
+  --md-font-body: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Noto Sans JP", sans-serif;
+  --md-text-xs: 12px;
+  --md-text-sm: 13px;
+  --md-text-md: 15px;
+  --md-text-lg: 17px;
+  --md-text-xl: 22px;
+  --md-text-display: 28px;
+
+  /* Motion: sliding door */
+  --md-duration: 250ms;
+  --md-easing: cubic-bezier(0.22, 1, 0.36, 1);
+}
