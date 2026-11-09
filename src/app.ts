@@ -86,7 +86,8 @@ export function createApp(root: HTMLElement, options: AppOptions = {}): App {
   toggleButton.type = 'button';
   toggleButton.className = 'button button--floating';
   toggleButton.dataset['role'] = 'open-config';
-  toggleButton.textContent = '設定';
+  toggleButton.textContent = '設定を開く';
+  toggleButton.setAttribute('aria-label', '設定パネルを開く');
   toggleButton.addEventListener('click', () => openConfig());
   display.append(toggleButton);
 

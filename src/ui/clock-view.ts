@@ -16,6 +16,12 @@ export function createClockView(root: HTMLElement): ClockView {
   section.className = 'clock';
   section.setAttribute('aria-label', '時計');
 
+  // 掛け軸の表装: 上下の余白
+  const scrollTop = document.createElement('div');
+  scrollTop.className = 'clock__scroll-edge';
+  scrollTop.dataset['role'] = 'clock-scroll-top';
+  scrollTop.setAttribute('aria-hidden', 'true');
+
   const time = document.createElement('div');
   time.className = 'clock__time';
   time.dataset['role'] = 'clock-time';
@@ -35,7 +41,12 @@ export function createClockView(root: HTMLElement): ClockView {
   timeRow.className = 'clock__time-row';
   timeRow.append(time, meridiem);
 
-  section.append(timeRow, date);
+  const scrollBottom = document.createElement('div');
+  scrollBottom.className = 'clock__scroll-edge clock__scroll-edge--bottom';
+  scrollBottom.dataset['role'] = 'clock-scroll-bottom';
+  scrollBottom.setAttribute('aria-hidden', 'true');
+
+  section.append(scrollTop, timeRow, date, scrollBottom);
   root.append(section);
 
   return {

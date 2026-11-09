@@ -74,7 +74,7 @@ export function createConfigPanel(root: HTMLElement, handlers: ConfigPanelHandle
 
   const heading = document.createElement('h1');
   heading.className = 'config-panel__heading';
-  heading.textContent = 'DJ Turntable Wallpaper';
+  heading.textContent = '和風DJ — 設定と操作';
 
   const error = document.createElement('p');
   error.className = 'config-panel__error';
@@ -105,7 +105,7 @@ export function createConfigPanel(root: HTMLElement, handlers: ConfigPanelHandle
   const dropZone = document.createElement('div');
   dropZone.className = 'drop-zone';
   dropZone.dataset['role'] = 'drop-zone';
-  dropZone.textContent = '画像または動画をここにドロップ';
+  dropZone.textContent = '画像または動画をここに奉納';
   dropZone.addEventListener('dragover', (event) => {
     event.preventDefault();
     dropZone.classList.add('drop-zone--active');

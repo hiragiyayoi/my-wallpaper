@@ -38,6 +38,14 @@ export function createTurntableView(root: HTMLElement): TurntableView {
   container.className = 'turntable';
   container.setAttribute('aria-label', 'ターンテーブル');
 
+  // DJブース: 木枠の土台
+  const booth = el('div', 'turntable__booth', 'booth');
+
+  // 電源ランプ (再生連動)
+  const lamp = el('span', 'turntable__lamp', 'lamp');
+  lamp.setAttribute('aria-hidden', 'true');
+  booth.append(lamp);
+
   // レコード盤
   const platter = el('div', 'turntable__platter', 'platter');
 
@@ -65,10 +73,24 @@ export function createTurntableView(root: HTMLElement): TurntableView {
   arm.append(armHead);
 
   platter.append(disc, arm);
+  booth.append(platter);
 
-  // トラック情報
+  // ミキサー風フェーダー (見た目のみ: 再生状態で光る)
+  const faders = el('div', 'turntable__faders', 'faders');
+  for (let i = 0; i < 3; i += 1) {
+    const fader = el('div', 'turntable__fader', `fader-${i}`);
+    const knob = el('div', 'turntable__fader-knob', `fader-knob-${i}`);
+    fader.append(knob);
+    faders.append(fader);
+  }
+  booth.append(faders);
+
+  // トラック情報 (短冊)
   const info = document.createElement('div');
   info.className = 'turntable__info';
+
+  const kicker = el('p', 'turntable__kicker', 'kicker');
+  kicker.textContent = 'Now Playing';
 
   const title = el('h2', 'turntable__title', 'title');
   title.textContent = PLACEHOLDER;
@@ -76,8 +98,8 @@ export function createTurntableView(root: HTMLElement): TurntableView {
   const creator = el('p', 'turntable__creator', 'creator');
   creator.textContent = PLACEHOLDER;
 
-  info.append(title, creator);
-  container.append(platter, info);
+  info.append(kicker, title, creator);
+  container.append(booth, info);
   root.append(container);
 
   let currentState: PlaybackState = 'idle';
@@ -93,6 +115,7 @@ export function createTurntableView(root: HTMLElement): TurntableView {
       arm.style.transform = `rotate(${toneArmAngle(state)}deg)`;
       video.dataset['state'] = state;
       container.dataset['state'] = state;
+      lamp.dataset['lit'] = state === 'playing' ? 'true' : 'false';
     },
     setTrackInfo(next: TrackInfo) {
       title.textContent = next.title.length > 0 ? next.title : PLACEHOLDER;
