@@ -5,13 +5,13 @@ DJ ターンテーブルをモチーフとした UI で、背景画像・動画�
 
 ## 特徴
 
-- **背景画像選択**: 任意の JPEG / PNG / WebP / GIF を背景に設定（IndexedDB に永続化）
-- **動画再生 + ターンテーブル UI**: HTML5 video を DJ ターンテーブル（レコード回転）メタファーで表示
-  - 動画タイトル・制作者名（チャンネル名）表示
+- **背景画像選択**: 任意の JPEG / PNG / WebP / GIF を背景に設定 (IndexedDB に永続化)
+- **動画再生 + ターンテーブル UI**: HTML5 video を DJ ターンテーブル (レコード回転) メタファーで表示
+  - 動画タイトル・制作者名 (チャンネル名) 表示
   - 再生 / 一時停止 / 音量 / シーク操作
-- **時計表示**: OS システム時計をリアルタイム表示（12/24 時間切替、日付・曜日）
-- **クロスプラットフォーム**: Windows (Wallpaper Engine / Lively) / Linux (swww / mpvpaper) / macOS (Plash)
-- **パフォーマンス**: FPS 制御、省電力モード対応
+- **時計表示**: OS システム時計をリアルタイム表示 (12/24 時間切替、日付・曜日)
+- **クロスプラットフォーム**: Windows (Wallpaper Engine / Lively) / Linux (awww / mpvpaper) / macOS (Plash)
+- **パフォーマンス**: CSS アニメーション制御、省電力モード対応
 
 ## 技術スタック
 
@@ -19,10 +19,10 @@ DJ ターンテーブルをモチーフとした UI で、背景画像・動画�
 |---|---|
 | 言語 | TypeScript |
 | ビルド | Vite |
-| 描画 | CSS3 Animation + Canvas API |
+| 描画 | CSS3 Animation (Canvas API は使用しない) |
 | 動画再生 | HTML5 `<video>` |
 | 時計 | JavaScript `Date` / `Intl.DateTimeFormat` |
-| ストレージ | IndexedDB / localStorage |
+| ストレージ | IndexedDB (localStorage は使用しない) |
 | 開発環境 | Nix (home-manager) |
 
 ## 開発環境セットアップ
@@ -33,7 +33,7 @@ DJ ターンテーブルをモチーフとした UI で、背景画像・動画�
 # Nix daemon を有効化
 . /nix/var/nix/profiles/default/etc/profile.d/nix.sh
 
-# home-manager を適用（初回のみ）
+# home-manager を適用 (初回のみ)
 cd ~/nix-config && nix flake check && home-manager switch --flake .#user
 ```
 
@@ -57,7 +57,8 @@ pnpm test
 
 ```
 my-wallpaper/
-├── REQUIREMENTS.md      # 要件定義書
+├── REQUIREMENTS.md      # 要件定義書 (v2.2)
+├── DESIGN.md            # 内部設計 (未承認ドラフト)
 ├── README.md            # 本ファイル
 ├── package.json
 ├── vite.config.ts
@@ -76,6 +77,17 @@ my-wallpaper/
 └── dist/                # ビルド成果物
 ```
 
+## ホスト別 Tier 分類
+
+| Tier | ホスト | HTML/JS | 動画再生 | 時計 |
+|---|---|---|---|---|
+| Tier 1 (Full) | Wallpaper Engine (Win) | ✅ | webm/ogg/ogv | ✅ |
+| Tier 1 (Full) | Lively Wallpaper (Win) | ✅ | mp4/webm/avi 等 | ✅ |
+| Tier 1 (Full) | Plash (macOS) | ✅ | WebKit 対応形式 | ✅ |
+| Tier 2 (Partial) | awww (Linux) | ❌ | ❌ | ❌ |
+| Tier 2 (Partial) | mpvpaper (Linux) | ❌ | mpv 経由 | ❌ |
+| Tier 3 (Minimal) | hyprpaper (Linux) | ❌ | ❌ | ❌ |
+
 ## ライブ壁紙としての使用
 
 ### Windows (Wallpaper Engine)
@@ -88,11 +100,11 @@ my-wallpaper/
 
 ### Linux
 ```bash
-# swww (静止画)
-swww img dist/preview.png
+# awww (静止画)
+awww img dist/fallback/screenshot.png
 
 # mpvpaper (動画)
-mpvpaper -o "loop" '*' dist/output.webm
+mpvpaper -o "loop" '*' dist/fallback/output.webm
 ```
 
 ### macOS (Plash)
@@ -104,5 +116,8 @@ MIT
 
 ## 関連リンク
 
-- [要件定義 (Issue #1)](https://github.com/hiragiyayoi/my-wallpaper/issues/1)
-- [実装計画 (Issue #2)](https://github.com/hiragiyayoi/my-wallpaper/issues/2)
+- [要件定義 (REQUIREMENTS.md)](./REQUIREMENTS.md)
+- [内部設計 (DESIGN.md)](./DESIGN.md) — 未承認ドラフト
+- [Issue #1](https://github.com/hiragiyayoi/my-wallpaper/issues/1)
+- [Issue #2](https://github.com/hiragiyayoi/my-wallpaper/issues/2)
+- [PR #3](https://github.com/hiragiyayoi/my-wallpaper/pull/3)
